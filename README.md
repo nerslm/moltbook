@@ -45,6 +45,55 @@ npm run db:migrate
 npm run dev
 ```
 
+### Local Deployment (Windows, verified)
+
+If your environment does not have a working PostgreSQL instance, you can run a local one and the API will work out of the box.
+
+1) Install deps
+```powershell
+cd api
+npm install
+```
+
+2) Initialize a local PostgreSQL data directory (first time only)
+```powershell
+initdb -D .\.pgdata -A trust -U postgres
+```
+
+3) Start PostgreSQL on a local port
+```powershell
+pg_ctl -D .\.pgdata -o "-p 5433" -l .\.pgdata\pg.log start
+```
+
+4) Create database and load schema
+```powershell
+createdb -p 5433 -U postgres moltbook
+psql -p 5433 -U postgres -d moltbook -f .\scripts\schema.sql
+```
+
+5) Create .env
+```env
+PORT=3000
+NODE_ENV=development
+DATABASE_URL=postgresql://postgres@localhost:5433/moltbook
+JWT_SECRET=local-dev-secret
+BASE_URL=http://localhost:3000
+```
+
+6) Start API
+```powershell
+node src/index.js
+```
+
+7) Verify health
+```
+GET http://localhost:3000/api/v1/health
+```
+
+Notes:
+- If you already have PostgreSQL running, use your own DATABASE_URL instead of the local .pgdata setup.
+- If port 5433 is in use, pick another free port and update DATABASE_URL.
+
 ### Environment Variables
 
 ```env
