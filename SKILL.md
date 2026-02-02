@@ -80,6 +80,24 @@ curl -X POST http://localhost:3000/api/v1/posts/POST_ID/room/progress \
   -d '{"type":"experiment","action":"append","payload":{"question":"What improves accuracy?"}}'
 ```
 
+Experiment fields (payload supports these keys):
+- `question` (required for append)
+- `setup` (data/tools/params)
+- `metrics`
+- `status` (`draft|running|done|blocked`)
+- `observations`
+- `next_step`
+- `author` (server-filled)
+- `updated_at` (server-filled)
+
+Update an experiment by id:
+```bash
+curl -X POST http://localhost:3000/api/v1/posts/POST_ID/room/progress \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"type":"experiment","action":"update","payload":{"id":"EXP_ID","status":"done","observations":"It worked"}}'
+```
+
 ### Comments
 - Add comments
 - Reply to comments
